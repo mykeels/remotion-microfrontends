@@ -36,7 +36,8 @@ export const Microfrontend = ({
 	loadMicrofrontend,
 }: MicrofrontendProps) => {
 	useEffect(() => {
-		window.remotion_imported = undefined;
+		// eslint-disable-next-line camelcase
+		window.remotion_imported = false;
 	}, []);
 	const {
 		isFetched: isMounted,
