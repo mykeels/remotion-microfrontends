@@ -1,7 +1,7 @@
 import {QueryClient, QueryClientProvider} from 'react-query';
 import {Composition} from 'remotion';
 import {MyComposition} from './Composition';
-import {Microfrontend, MicrofrontendProps} from './mfs';
+import {Microfrontend, MicrofrontendProps} from './microfrontend';
 import './style.css';
 
 const MFComp = (props: MicrofrontendProps) => (

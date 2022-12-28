@@ -5,7 +5,7 @@ import {useQuery} from 'react-query';
 import PropTypes from 'prop-types';
 import assert from 'tiny-invariant';
 
-import {loadMicrofrontend} from './loader.utils';
+import {loadMicrofrontend} from './utils/loader.utils';
 
 export type MicrofrontendProps = {
 	scope: string;

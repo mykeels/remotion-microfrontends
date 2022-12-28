@@ -1,25 +1,8 @@
 /* eslint-disable camelcase */
 /* eslint-disable @typescript-eslint/ban-ts-comment */
-import invariant from "tiny-invariant";
 
-/**
- * Given a condition/value, ensure it is truthy, else throw an error
- */
-const assert = <TOptional>(condition: TOptional, message?: string | (() => string)): NonNullable<TOptional> => {
-  invariant(
-    condition,
-    typeof message === "string"
-      ? `AssertError: ${message}`
-      : message || `AssertError: condition must be truthy`
-  );
-  const _condition = condition as NonNullable<TOptional>;
-  return _condition;
-};
-
-
-const sleep = (ms = 1000) => new Promise(resolve => {
-  setTimeout(resolve, ms)
-})
+import { sleep } from "./sleep.utils";
+import { assert } from "./assert.utils";
 
 type WebpackFederatedModule = { default: { mount: (containerRef: string|HTMLElement) => () => void, unmount: (containerRef: string|HTMLElement) => void } }
 export function loadComponent(scope: string, module: string) {
@@ -32,8 +15,11 @@ export function loadComponent(scope: string, module: string) {
     // eslint-disable-next-line no-undef
     await __webpack_init_sharing__("default");
 
-    /** @type {{ init: () => Promise<any> }} */
-    const container = /** @type {{ [key: string]: any }} */ (window)[scope]; // Or get the container somewhere else
+    type ModuleContainer = {
+      init: () => Promise<void>
+      get: (module: string) => () => WebpackFederatedModule
+    }
+    const container = ((window as unknown) as Record<typeof scope, ModuleContainer>)[scope]; // Or get the container somewhere else
     // Initialize the container, it may provide shared modules
     try {
       // @ts-ignore
@@ -43,7 +29,7 @@ export function loadComponent(scope: string, module: string) {
       console.warn(err, { scope, module, container });
     }
     const factory = await Promise.race([
-      /** @type {{ [key: string]: any }} */ (window)[scope]?.get(module),
+      container?.get(module),
       sleep(300).then(() =>
         Promise.reject(
           new Error(
@@ -95,6 +81,5 @@ export const loadMicrofrontend = async ({ entry, scope, module }: { entry: strin
       };
     })
     .catch(
-      /** @param {Error} error */
-      (error) => Promise.reject(error)
+      (error: unknown) => Promise.reject(error)
     );
