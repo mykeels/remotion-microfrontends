@@ -12,7 +12,8 @@ There are two projects, [my-chassis](./my-chassis/) and [my-video](./my-video/).
 
 - CORS may prevent assets of one project from being loaded in the browser when running the other project, so I use [Allow CORS](https://chrome.google.com/webstore/detail/allow-cors-access-control/lhobafahddgcelffkeicbaginigeejlf?hl=en-US), a chrome extension to disable CORS so I can keep experimenting.
 - Remotion keeps complaining about there being multiple versions of itself running, even though I have set it up as a shared module in webpack's module-federation. I have gotten around this by setting `window.remotion_imported = false`, and this can be discussed later.
-- Hooks like `useCurrentFrame()` and `useVideoConfig()` are very important for rendering a video
+- Crucial components for allowing use of `useCurrentFrame()` and `useVideoConfig()` in remote compositions are not exposed in remotion's core, and [a forked branch has been created for this](https://github.com/remotion-dev/remotion/compare/main...mykeels:remotion:load-composition-over-url?expand=1#diff-9a4ceebe7c6f86856371906c3f061d3b56b7457022b05179884a113e7ced67e8).
+- Remotion components such as `Sequence`, `Series`, `Freeze` and more, have not been tested, but can be in further investigations if this works.
 
 ## Goals
 
