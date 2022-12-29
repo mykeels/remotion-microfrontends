@@ -12,11 +12,14 @@ There are two projects, [my-chassis](./my-chassis/) and [my-video](./my-video/).
 
 - CORS may prevent assets of one project from being loaded in the browser when running the other project, so I use [Allow CORS](https://chrome.google.com/webstore/detail/allow-cors-access-control/lhobafahddgcelffkeicbaginigeejlf?hl=en-US), a chrome extension to disable CORS so I can keep experimenting.
 - Remotion keeps complaining about there being multiple versions of itself running, even though I have set it up as a shared module in webpack's module-federation. I have gotten around this by setting `window.remotion_imported = false`, and this can be discussed later.
+- Hooks like `useCurrentFrame()` and `useVideoConfig()` are very important for rendering a video
 
 ## Goals
 
-1. A microfrontend component:
-    - should have access to:
-      - video config
-      - current frame
-    - should use remotion's `delayRender` and `continueRender` when fetching microfrontend assets
+A microfrontend component should:
+
+1. Continue to work as expected with hooks such as:
+    - `useVideoConfig()`
+    - `useCurrentFrame()`
+
+2. Use remotion's `delayRender` and `continueRender` when loading
