@@ -6,7 +6,7 @@ import PropTypes from 'prop-types';
 import assert from 'tiny-invariant';
 
 import {loadMicrofrontend} from './utils/loader.utils';
-import { useCurrentFrame, useVideoConfig, VideoConfig } from 'remotion';
+import { continueRender, delayRender, useCurrentFrame, useVideoConfig, VideoConfig } from 'remotion';
 
 export type MicrofrontendProps = {
 	scope: string;
@@ -15,14 +15,15 @@ export type MicrofrontendProps = {
 	url?: string;
 	key?: string;
 	id?: string;
+	hasDelayedRender?: boolean;
 	className?: string;
-	Loading: JSX.Element | (() => JSX.Element);
+	Loading?: JSX.Element | (() => JSX.Element);
 	loadMicrofrontend?: (manifest: {
 		scope: string;
 		entry: string;
 		module: string;
 	}) => Promise<{
-		mount: (containerRef: string | HTMLElement, props: { frame: number, config: VideoConfig }) => () => void;
+		mount: (containerRef: string | HTMLElement, props: { frame: number, config: VideoConfig, continueRender: () => void }) => () => void;
 		unmount: (containerRef: string | HTMLElement) => void;
 	}>;
 };
@@ -34,8 +35,10 @@ export const Microfrontend = ({
 	module,
 	Loading,
 	className,
+	hasDelayedRender,
 	loadMicrofrontend,
 }: MicrofrontendProps) => {
+	const [handle] = useState(() => delayRender());
 	const frame = useCurrentFrame()
 	const config = useVideoConfig()
 	useEffect(() => {
@@ -67,7 +70,10 @@ export const Microfrontend = ({
 
 		let unmount: (() => void) | null = null;
 		try {
-			unmount = mount(containerId, { frame, config });
+			unmount = mount(containerId, { frame, config, continueRender: () => continueRender(handle) });
+			if (!hasDelayedRender) {
+				continueRender(handle);
+			}
 		} catch (error) {
 			setMFError(
 				new Error(
@@ -109,7 +115,7 @@ export const Microfrontend = ({
 		typeof Loading === 'function' ? (
 			<Loading />
 		) : (
-			Loading
+			Loading ? Loading : <div>...loading...</div>
 		)
 	) : (
 		<div
@@ -122,6 +128,7 @@ export const Microfrontend = ({
 
 Microfrontend.defaultProps = {
 	loadMicrofrontend,
+	Loading: () => <div>...loading...</div>
 };
 
 Microfrontend.propTypes = {

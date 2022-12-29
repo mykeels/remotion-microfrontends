@@ -12,7 +12,7 @@ import {
 export default {
 	mount: (
 		ref: string | HTMLElement,
-		{frame, config}: {frame: number; config: VideoConfig}
+		{frame, config, continueRender}: {frame: number; config: VideoConfig, continueRender: () => void}
 	) => {
 		const container =
 			ref instanceof HTMLElement ? ref : document.getElementById(ref);
@@ -66,5 +66,9 @@ export default {
 				</CompositionManager.Provider>
 			</CanUseRemotionHooks.Provider>
 		);
+		/**
+		 * Ideally, continueRender should be called in a useEffect(), that runs after the component is fully loaded
+		 */
+		continueRender()
 	},
 };
