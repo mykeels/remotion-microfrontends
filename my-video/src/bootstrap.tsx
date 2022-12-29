@@ -31,10 +31,10 @@ export default {
 						{
 							compositions: [
 								{
-									id: 'wrapped',
+									id: 'idMustMatch',
 								},
 							],
-							currentComposition: 'wrapped',
+							currentComposition: 'idMustMatch',
 							currentCompositionMetadata: {
 								defaultProps: config.defaultProps,
 								durationInFrames: config.durationInFrames,
