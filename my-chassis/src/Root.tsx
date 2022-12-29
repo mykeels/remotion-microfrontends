@@ -1,10 +1,11 @@
 import {QueryClient, QueryClientProvider} from 'react-query';
 import {Composition} from 'remotion';
+
 import {MyComposition} from './Composition';
 import {Microfrontend, MicrofrontendProps} from './microfrontend';
 import './style.css';
 
-const MFComp = (props: MicrofrontendProps) => (
+const MicrofrontendComposition = (props: MicrofrontendProps) => (
 	<QueryClientProvider client={new QueryClient()}>
 		<Microfrontend {...props} />
 	</QueryClientProvider>
@@ -23,8 +24,8 @@ export const RemotionRoot: React.FC = () => {
 			/>
 
 			<Composition
-				id="MFComp"
-				component={MFComp}
+				id="MicrofrontendComposition"
+				component={MicrofrontendComposition}
 				durationInFrames={240}
 				fps={30}
 				width={1280}

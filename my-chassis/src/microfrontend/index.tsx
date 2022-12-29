@@ -6,6 +6,7 @@ import PropTypes from 'prop-types';
 import assert from 'tiny-invariant';
 
 import {loadMicrofrontend} from './utils/loader.utils';
+import { useCurrentFrame, useVideoConfig, VideoConfig } from 'remotion';
 
 export type MicrofrontendProps = {
 	scope: string;
@@ -21,7 +22,7 @@ export type MicrofrontendProps = {
 		entry: string;
 		module: string;
 	}) => Promise<{
-		mount: (containerRef: string | HTMLElement) => () => void;
+		mount: (containerRef: string | HTMLElement, props: { frame: number, config: VideoConfig }) => () => void;
 		unmount: (containerRef: string | HTMLElement) => void;
 	}>;
 };
@@ -35,6 +36,8 @@ export const Microfrontend = ({
 	className,
 	loadMicrofrontend,
 }: MicrofrontendProps) => {
+	const frame = useCurrentFrame()
+	const config = useVideoConfig()
 	useEffect(() => {
 		// eslint-disable-next-line camelcase
 		window.remotion_imported = false;
@@ -64,7 +67,7 @@ export const Microfrontend = ({
 
 		let unmount: (() => void) | null = null;
 		try {
-			unmount = mount(containerId);
+			unmount = mount(containerId, { frame, config });
 		} catch (error) {
 			setMFError(
 				new Error(
@@ -87,7 +90,7 @@ export const Microfrontend = ({
 				);
 			}
 		};
-	}, [isMounted, isError, entry, module]);
+	}, [isMounted, isError, entry, module, frame, config]);
 
 	return isError ? (
 		<div>
