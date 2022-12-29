@@ -34,7 +34,6 @@ export const RemotionRoot: React.FC = () => {
 					scope: 'MyVideo',
 					entry: 'http://localhost:3002/remoteEntry.js',
 					module: './src/bootstrap',
-					Loading: <div>...loading...</div>,
 				}}
 			/>
 		</>
