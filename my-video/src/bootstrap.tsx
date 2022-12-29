@@ -25,6 +25,15 @@ export default {
 		(container as unknown as {reactRoot: ReactDOM.Root}).reactRoot = root;
 		container.setAttribute('data-react-root', 'true');
 		root.render(
+			/**
+			 * Stubbing these contexts, is important so hooks like `useVideoConfig()` and `useCurrentFrame()` can continue to work.
+			 * 
+			 * In the future, it may be helpful to provide a context provider such as:
+			 * @example
+			 * <RemoteComposition frame={frame} config={config}>
+			 * 	{children}
+			 * </RemoteComposition>
+			 */
 			<CanUseRemotionHooks.Provider value>
 				<CompositionManager.Provider
 					value={
